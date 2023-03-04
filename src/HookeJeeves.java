@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class HookeJeeves {
@@ -8,51 +7,50 @@ public class HookeJeeves {
     }
 
 
-    private final double[] x = new double[4];
+    private final double[] xStart = new double[4];
+    private final double[] x = new double[xStart.length];
     private double k = 1.5;
     private final double e = 0.02;
 
-    private double f() {
-        return IntStream.range(0, x.length).mapToDouble(i -> (i+1)*Math.pow(x[i], (i-1))).sum();
+    private double f(double[] x) {
+        return IntStream.range(0, x.length).mapToDouble(i -> (i + 1) * Math.pow(x[i], (i - 1))).sum();
     }
 
     private void algorytm() {
-        Arrays.fill(x, 1);
-        for (int i = 0; i < 10; i++) {
-            krokProbny();
-        }
-
-
+        Arrays.fill(xStart, 1);
+        Arrays.setAll(x, i -> xStart[i]);
+        krokProbny();
+        Arrays.setAll(xStart, i -> x[i]);
+        krokRoboczy();
     }
 
     private void krokProbny() {
-        double f1 = f();
-        double f2;
-        double temp;
         double v = k;
         for (int i = 0; i < x.length; i++) {
-            k = v;
-            do {
-                temp = x[i];
-                x[i] += k; //krok w jedną stronę
-                f2 = f();
-                if (f2 > f1) { //sprawdzenie warunku
-                    x[i] -= 2 * k; //jeśli krok się nie powiódł to wykonaj krok w przeciwną stronę
-                    f2 = f();
-                    if (f2 > f1) { //sprawdzenie warunku
-                        x[i] = temp; //jeśli krok w żadną ze stron się nie powiódł wróć do poprzedniej wartości
-                        if (k>e) // sprawdzenie czy krok nie jest zbyt mały
-                            k *= 0.2; //zmiejszenie kroku
-                        else break;
-                    }
-
-                }
-            } while (f2 > f1);
+            x[i] += k;
+            if (f(x) < f(xStart)) {
+                k = v;
+                continue;
+            }
+            x[i] -= 2 * k;
+            if (f(x) < f(xStart)) {
+                k = v;
+                continue;
+            }
+            x[i] = xStart[i];
+            if (k > e) {
+                k *= 0.2;
+                i--;
+            }
         }
     }
 
     private void krokRoboczy() {
-
+        double v = 1.5;
+        for (int i = 0; i < x.length; i++) {
+            x[i] = xStart[i] + v * (x[i] - xStart[i]);
+        }
+        // nowy x = stary + 1,5 * (nowy - stary)
     }
 
 }
