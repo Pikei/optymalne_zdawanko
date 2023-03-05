@@ -53,12 +53,12 @@ public class SpadekWzgledemWspolrzednych {
     }
 
     private void printResult() {
-        System.out.println("\n============================");
+        System.out.println("\n=============================");
         System.out.println("Wartość funkcji: " + f(x));
         System.out.println("Współrzędne punktu: ");
         IntStream.range(0, x.length).mapToObj(i -> "x[" + i + "] = " + x[i]).forEach(System.out::println);
         System.out.println("\nAktualny krok: ");
         IntStream.range(0, k.length).mapToObj(i -> "dla x[" + i + "] krok wynosi: " + k[i]).forEach(System.out::println);
-        System.out.println("============================");
+        System.out.println("=============================");
     }
 }
