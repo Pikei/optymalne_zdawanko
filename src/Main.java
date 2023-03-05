@@ -5,6 +5,7 @@ public class Main {
 //        new SpadekWzgledemWspolrzednych();
 //        new HookeJeeves();
 //        new GradientProsty();
-        new Pso();
+//        new Pso();
+        new NajszybszySpadek();
     }
 }
