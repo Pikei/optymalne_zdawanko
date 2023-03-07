@@ -1,15 +1,14 @@
 package pso;
 public class Particle {
     private double rating;
-    private double x, y;
+    private double[] x;
     private double[] personalBest;
     private double[] globalBest;
     private double[] v;
 
-    public Particle(double rating, double x, double y, double[] personalBest, double[] globalBest, double[] v) {
+    public Particle(double rating, double[] x, double[] personalBest, double[] globalBest, double[] v) {
         this.rating = rating;
         this.x = x;
-        this.y = y;
         this.personalBest = personalBest;
         this.globalBest = globalBest;
         this.v = v;
@@ -23,20 +22,12 @@ public class Particle {
         this.rating = rating;
     }
 
-    public double getX() {
+    public double[] getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(double[] x) {
         this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
     public double[] getPersonalBest() {
