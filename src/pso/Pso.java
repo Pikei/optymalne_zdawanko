@@ -22,7 +22,6 @@ public class Pso {
         IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
         int count = 0;
         do {
-//        for (int k = 0; k < iterations; k++) {
             IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
             moveParticle();
             count++;
@@ -87,13 +86,6 @@ public class Pso {
                 swarm.get(i).getX()[j] += swarm.get(i).getV()[j];
             }
         }
-
-//        IntStream.range(0, swarm.size()).filter(i -> func(swarm.get(i).getPersonalBest()[0], swarm.get(i).getPersonalBest()[1]) > swarm.get(i).getRating()).forEach(i -> {
-//            double[] temp = new double[2];
-//            temp[0] = swarm.get(i).getX();
-//            temp[1] = swarm.get(i).getY();
-//            swarm.get(i).setPersonalBest(temp);
-//        });
     }
 
     private void updateGlobalBest() {
@@ -133,7 +125,11 @@ public class Pso {
         return rand.nextDouble() * (max - min) + min;
     }
 
-
+    private double round(double value) {
+        int temp = (int) (value*1000);
+        value = (temp/1000);
+        return value;
+    }
 
     private void printParticle() {
         IntStream.range(0, swarm.size()).forEach(i -> {
