@@ -10,22 +10,18 @@ public class Pso {
     private final HashMap<Integer, Particle> swarm = new HashMap<>();
     private final Random rand = new Random();
     private final int swarmSize;
-    private final int iterations;
     private final int dimensions;
 
 
-    public Pso(int swarmSize, int iterations, int dimensions) {
+    public Pso(int swarmSize, int dimensions) {
         this.swarmSize = swarmSize;
-        this.iterations = iterations;
         this.dimensions = dimensions;
         createSwarm();
         IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
-        int count = 0;
         do {
             IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
             moveParticle();
-            count++;
-        } while (!exit() && count<iterations) ;
+        } while (!exit()) ;
 
         printParticle();
         printGlobalBest();
@@ -42,7 +38,7 @@ public class Pso {
             double[] globalBest = new double[x.length];
             double[] v = new double[x.length];
             Arrays.setAll(x, j -> randomize(-100, 100));
-            Arrays.setAll(personalBest, j -> randomize(-100, 100));
+            Arrays.setAll(personalBest, j -> x[j]);
             Arrays.setAll(v, j -> randomize(-1, 1));
             Arrays.fill(globalBest,1);
             swarm.put(i, new Particle(func(x), x, personalBest, globalBest, v));
@@ -52,6 +48,7 @@ public class Pso {
     private double[] findGlobalBest() {
         double max = swarm.get(0).getRating();
         double[] best = new double[dimensions];
+        IntStream.range(0, swarm.get(0).getX().length).forEach(i -> best[i] = swarm.get(0).getX()[i]);
         for (int i = 0; i < swarm.size(); i++) {
             if (swarm.get(i).getRating() < max) {
                 max = swarm.get(i).getRating();
@@ -110,25 +107,24 @@ public class Pso {
     }
 
     private boolean exit() {
-        int counter = 0;
+        int counterParticle = 0;
         for (int i = 0; i < swarm.size(); i++) {
-            for (int j = 0; j < swarm.get(i).getX().length; j++) {
-                if (Math.abs(swarm.get(i).getX()[j] - swarm.get(i).getGlobalBest()[j]) < 0.02){
-                    counter ++;
-                }
-            }
+            if (euklides(swarm.get(i).getX(), swarm.get(i).getGlobalBest()) == swarm.get(i).getX().length)
+                counterParticle++;
         }
-        return counter == swarm.size();
+        return counterParticle == swarm.size();
+    }
+
+    private int euklides(double[] x, double[] y){
+        int couner = 0;
+        for (int i = 0; i < x.length; i++) {
+            if (Math.sqrt(Math.pow(x[i] - y[i], 2)) < 0.02) couner++;
+        }
+        return couner;
     }
 
     private double randomize(double min, double max) {
         return rand.nextDouble() * (max - min) + min;
-    }
-
-    private double round(double value) {
-        int temp = (int) (value*1000);
-        value = (temp/1000);
-        return value;
     }
 
     private void printParticle() {
@@ -146,7 +142,6 @@ public class Pso {
             System.out.println("---------------------------");
         });
     }
-
 
     private void printGlobalBest() {
             System.out.println("---------------------------");

@@ -48,5 +48,4 @@ public class GradientProsty {
         System.out.println("Współrzędne punktu: ");
         IntStream.range(0, x.length).mapToObj(i -> "x[" + i + "] = " + x[i]).forEach(System.out::println);
     }
-
 }
